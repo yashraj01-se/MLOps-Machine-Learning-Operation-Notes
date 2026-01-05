@@ -68,3 +68,7 @@ if __name__ == "__main__":
     print("Is Palindrome ('Racecar'):", is_palindrome("Racecar"))
     print("Count Vowels ('Hello World'):", count_vowels("Hello World"))
     print("Count Consonants ('Hello World'):", count_consonants("Hello World"))
+
+## helper2 --- IGNORE ---
+## helper2 --- IGNORE ---
+## helper2 --- IGNORE ---
