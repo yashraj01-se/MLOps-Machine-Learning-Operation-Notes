@@ -5,3 +5,4 @@ print("Let's make some changes and track them with Git.")
 print("This is my second attempt to GitHub!")
 
 print("Adding a new line to test GitHub functionality.")
+print("Final line to confirm everything is working well.")
