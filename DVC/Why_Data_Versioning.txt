@@ -1,0 +1,18 @@
+Data versioning is the practice of tracking, identifying, and reproducing specific versions of datasets over time, along with the changes that produced them.
+
+As GIT handles the Code Versioning, DVC handles data versioning.
+
+Which exact data was used?
+
+When did it change?
+
+Why did it change?
+
+What downstream artifacts depend on it?
+
+Data versioning ensures that any model can be traced back to the exact data state that produced it.
+
+
+
+When we commit or tag a version of the code in Git, DVC associates that commit with a specific data state, identified by a unique content hash.
+This allows us to know exactly which version of the data was used to produce a given model version.
