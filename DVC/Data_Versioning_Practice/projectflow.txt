@@ -30,3 +30,7 @@
 14. Check dvc/git status, everything should be upto date.
 
 15. Now repeat step 10-12 for v3 of data.
+
+git log --oneline
+git checkout <Sha id>; checkout main
+dvc pull
