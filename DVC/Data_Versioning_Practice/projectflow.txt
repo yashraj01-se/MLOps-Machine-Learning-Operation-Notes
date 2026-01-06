@@ -1,0 +1,32 @@
+1. Create git repo and clone it in local.
+
+2. Create code.py and add code to it.
+   (It will save a csv file to a new "data" folder)
+
+3. Do a git add commit push before initializing dvc.
+   
+4. Now we do "dvc init" (creates .dvcignore)(Pip install dvc)
+
+5. Now do "dvc init -s" (creates a new "dvc" directory)
+
+6. Now we do "dvc remote add myremote s3"
+
+7. Next "dvc add data/"
+   Now it will ask to do: "git rm -r cached data" and "git commit -m 'Stop tracking data'"
+   Because initially we were tracking data folder from git so now we remove it from git to DVC to handle.
+
+8. Again we do "dvc add data/" (creates .dvc files then git add .dvcignore .dvc files)
+
+9. Now do "dvc commit" and then "dvc push"
+
+10. Do a git add commit push to mark this as our first version of data.
+
+11. Now make changes to code.py to append a new row in data, check changes via "dvc status"
+
+12. Again do "dvc commit" and then "dvc push"
+
+13. Then git add/commit/push (we are saving v2 of our data at this point)
+
+14. Check dvc/git status, everything should be upto date.
+
+15. Now repeat step 10-12 for v3 of data.
