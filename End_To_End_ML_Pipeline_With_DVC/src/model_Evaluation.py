@@ -5,6 +5,8 @@ import pickle
 import numpy as np
 from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score
 import json
+from dvclive import Live
+import yaml
 
 ########## Ensure the log directory exists
 log_dir = 'logs'
@@ -30,6 +32,28 @@ file_handler.setFormatter(formatter)
 # Adding handlers to logger
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
+
+def load_params(param_path: str) -> dict:
+    """
+    Load parameters from a YAML file.
+
+    Args:
+        param_path (str): Path to the YAML file.
+    """
+    try:
+        with open(param_path, 'r') as f:
+            params = yaml.safe_load(f)
+        logger.debug(f"Parameters loaded successfully from {param_path}")
+        return params
+    except FileNotFoundError as e:
+        logger.error(f"Parameter file not found: {e}")
+        raise
+    except yaml.YAMLError as e:
+        logger.error(f"Error parsing YAML file {param_path}: {e}")
+        raise
+    except Exception as e:
+        logger.error(f"Error loading parameters from {param_path}: {e}")
+        raise
 
 def load_model(model_path: str):
     """
@@ -118,6 +142,7 @@ def save_metrics(metrics: dict, file_path: str) -> None:
 
 def main():
     try:
+        params=load_params(param_path='params.yaml')
         model_path = './models/random_forest_model.pkl'
         test_data_path = './data/processed/test_vectorized.csv'
         metrics_output_path = './reports/metrics/model_evaluation_metrics.json'
@@ -129,6 +154,14 @@ def main():
         test_data = load_data(test_data_path)
         X_test = test_data.iloc[:, :-1].values
         y_test = test_data.iloc[:, -1].values
+
+        # Experiment tracking with DVC Live:
+        with Live(save_dvc_exp=True) as live:
+            live.log_metric('accuracy', accuracy_score(y_test, y_test))
+            live.log_metric('precision', precision_score(y_test, y_test))
+            live.log_metric('recall', recall_score(y_test, y_test))
+
+            live.log_params(params)
 
         # Evaluate the model
         metrics = evaluate_model(model, X_test, y_test)

@@ -2,43 +2,42 @@ stages:
   data_ingestion:
     cmd: python End_To_End_ML_Pipeline_With_DVC/src/data_ingestion.py
     deps:
-      - End_To_End_ML_Pipeline_With_DVC/src/data_ingestion.py
+    - End_To_End_ML_Pipeline_With_DVC/src/data_ingestion.py
     params:
-      - data_ingestion.test_size
+    - data_ingestion.test_size
     outs:
-      - data/raw
+    - data/raw
   data_preprocessing:
     cmd: python End_To_End_ML_Pipeline_With_DVC/src/data_preprocessing.py
     deps:
-      - data/raw
-      - End_To_End_ML_Pipeline_With_DVC/src/data_preprocessing.py
+    - data/raw
+    - End_To_End_ML_Pipeline_With_DVC/src/data_preprocessing.py
     outs:
-      - data/interim
+    - data/interim
   Feature_Engineering:
     cmd: python End_To_End_ML_Pipeline_With_DVC/src/Feature_Engineering.py
     deps:
-      - data/interim
-      - End_To_End_ML_Pipeline_With_DVC/src/Feature_Engineering.py
+    - data/interim
+    - End_To_End_ML_Pipeline_With_DVC/src/Feature_Engineering.py
     params:
-      - Feature_Engineering.max_features
+    - Feature_Engineering.max_features
     outs:
-      - data/processed
+    - data/processed
   model_training:
     cmd: python End_To_End_ML_Pipeline_With_DVC/src/model_training.py
     deps:
-      - data/processed
-      - End_To_End_ML_Pipeline_With_DVC/src/model_training.py
+    - data/processed
+    - End_To_End_ML_Pipeline_With_DVC/src/model_training.py
     params:
-      - model_training.n_estimators
-      - model_training.random_state
+    - model_training.n_estimators
+    - model_training.random_state
     outs:
-      - models/random_forest_model.pkl
+    - models/random_forest_model.pkl
   model_Evaluation:
     cmd: python End_To_End_ML_Pipeline_With_DVC/src/model_Evaluation.py
     deps:
-      - models/random_forest_model.pkl
-      - data/processed/test_vectorized.csv
-      - End_To_End_ML_Pipeline_With_DVC/src/model_Evaluation.py
-    outs:
-      -  ./reports/metrics/model_evaluation_metrics.json
-      
+    - models/random_forest_model.pkl
+    - data/processed/test_vectorized.csv
+    - End_To_End_ML_Pipeline_With_DVC/src/model_Evaluation.py
+    metrics:
+    - ./reports/metrics/model_evaluation_metrics.json
