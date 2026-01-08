@@ -2,6 +2,7 @@ import pandas as pd
 import os
 from sklearn.model_selection import train_test_split
 import logging
+import yaml
 
 ########## Ensure the log directory exists
 log_dir = 'logs'
@@ -28,6 +29,28 @@ file_handler.setFormatter(formatter)
 # Adding handlers to logger
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
+
+def load_params(param_path: str) -> dict:
+    """
+    Load parameters from a YAML file.
+
+    Args:
+        param_path (str): Path to the YAML file.
+    """
+    try:
+        with open(param_path, 'r') as f:
+            params = yaml.safe_load(f)
+        logger.debug(f"Parameters loaded successfully from {param_path}")
+        return params
+    except FileNotFoundError as e:
+        logger.error(f"Parameter file not found: {e}")
+        raise
+    except yaml.YAMLError as e:
+        logger.error(f"Error parsing YAML file {param_path}: {e}")
+        raise
+    except Exception as e:
+        logger.error(f"Error loading parameters from {param_path}: {e}")
+        raise
 
 def load_data(data_url: str) -> pd.DataFrame:
     """
@@ -90,10 +113,12 @@ def save_data(train_df: pd.DataFrame, test_df: pd.DataFrame, data_path: str):
 
 def main():
     try:
+        params=load_params('params.yaml')
+        test_size=params['data_ingestion']['test_size']
         data_path='https://raw.githubusercontent.com/Vikashishere/Datasets/main/spam.csv'
         df=load_data(data_url=data_path)
         final_df=preprocess_data(df)
-        train_df,test_df=train_test_split(final_df,test_size=0.2,random_state=42)
+        train_df,test_df=train_test_split(final_df,test_size=test_size,random_state=42)
         save_data(train_df,test_df,data_path='./data')
     except Exception as e:
         logger.error(f"Error in data ingestion pipeline: {e}")

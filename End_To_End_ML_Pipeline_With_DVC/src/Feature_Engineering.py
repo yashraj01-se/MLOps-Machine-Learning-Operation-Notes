@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import logging
 from sklearn.feature_extraction.text import TfidfVectorizer 
+import yaml
 
 ########## Ensure the log directory exists
 log_dir = 'logs'
@@ -27,6 +28,28 @@ file_handler.setFormatter(formatter)
 # Adding handlers to logger
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
+
+def load_params(param_path:str) -> dict:
+    """
+    Load parameters from a YAML file.
+
+    Args:
+        param_path (str): Path to the YAML file.
+    """
+    try:
+        with open(param_path,'r') as f:
+            params=yaml.safe_load(f)
+        logger.debug(f"Parameters loaded successfully from {param_path}")
+        return params
+    except FileNotFoundError as e:
+        logger.error(f"Parameter file not found: {e}")
+        raise
+    except yaml.YAMLError as e:
+        logger.error(f"Error parsing YAML file {param_path}: {e}")
+        raise
+    except Exception as e:
+        logger.error(f"Error loading parameters from {param_path}: {e}")
+        raise
 
 def load_data(file_path:str) -> pd.DataFrame:
     """
@@ -100,7 +123,8 @@ def main():
     Docstring for main
     """
     try:
-        max_features=50
+        params=load_params('params.yaml')
+        max_features=params['Feature_Engineering']['max_features']
         train_data=load_data('data/interim/train_preprocessed.csv')
         test_data=load_data('data/interim/test_preprocessed.csv')
 

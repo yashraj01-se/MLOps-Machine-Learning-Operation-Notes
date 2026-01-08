@@ -3,6 +3,8 @@ stages:
     cmd: python End_To_End_ML_Pipeline_With_DVC/src/data_ingestion.py
     deps:
       - End_To_End_ML_Pipeline_With_DVC/src/data_ingestion.py
+    params:
+      - data_ingestion.test_size
     outs:
       - data/raw
   data_preprocessing:
@@ -17,6 +19,8 @@ stages:
     deps:
       - data/interim
       - End_To_End_ML_Pipeline_With_DVC/src/Feature_Engineering.py
+    params:
+      - Feature_Engineering.max_features
     outs:
       - data/processed
   model_training:
@@ -24,6 +28,9 @@ stages:
     deps:
       - data/processed
       - End_To_End_ML_Pipeline_With_DVC/src/model_training.py
+    params:
+      - model_training.n_estimators
+      - model_training.random_state
     outs:
       - models/random_forest_model.pkl
   model_Evaluation:
