@@ -41,3 +41,10 @@ stages:
     - End_To_End_ML_Pipeline_With_DVC/src/model_Evaluation.py
     metrics:
     - ./reports/metrics/model_evaluation_metrics.json
+params:
+- dvclive/params.yaml
+metrics:
+- dvclive/metrics.json
+plots:
+- dvclive/plots/metrics:
+    x: step

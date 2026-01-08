@@ -9,11 +9,11 @@ stages:
       size: 4408
     params:
       params.yaml:
-        data_ingestion.test_size: 0.3
+        data_ingestion.test_size: 0.25
     outs:
     - path: data/raw
       hash: md5
-      md5: 506021b2951b5a642d0d50e6e224e825.dir
+      md5: 88d82724c73a1f00d449f689df79275d.dir
       size: 484846
       nfiles: 2
   data_preprocessing:
@@ -25,14 +25,14 @@ stages:
       size: 4509
     - path: data/raw
       hash: md5
-      md5: 506021b2951b5a642d0d50e6e224e825.dir
+      md5: 88d82724c73a1f00d449f689df79275d.dir
       size: 484846
       nfiles: 2
     outs:
     - path: data/interim
       hash: md5
-      md5: 0b7a670bbe67e5133821f1bf3ed4a950.dir
-      size: 263911
+      md5: 34bb83023e6416ff318ed6f5c0a8e3e6.dir
+      size: 262748
       nfiles: 2
   Feature_Engineering:
     cmd: python End_To_End_ML_Pipeline_With_DVC/src/Feature_Engineering.py
@@ -43,17 +43,17 @@ stages:
       size: 4964
     - path: data/interim
       hash: md5
-      md5: 0b7a670bbe67e5133821f1bf3ed4a950.dir
-      size: 263911
+      md5: 34bb83023e6416ff318ed6f5c0a8e3e6.dir
+      size: 262748
       nfiles: 2
     params:
       params.yaml:
-        Feature_Engineering.max_features: 40
+        Feature_Engineering.max_features: 55
     outs:
     - path: data/processed
       hash: md5
-      md5: a785a455b5f70febb77b7e994aa153c9.dir
-      size: 961375
+      md5: 3f91979207af206f86761715a169d2ec.dir
+      size: 1304433
       nfiles: 2
   model_training:
     cmd: python End_To_End_ML_Pipeline_With_DVC/src/model_training.py
@@ -64,18 +64,18 @@ stages:
       size: 4679
     - path: data/processed
       hash: md5
-      md5: a785a455b5f70febb77b7e994aa153c9.dir
-      size: 961375
+      md5: 3f91979207af206f86761715a169d2ec.dir
+      size: 1304433
       nfiles: 2
     params:
       params.yaml:
-        model_training.n_estimators: 30
+        model_training.n_estimators: 25
         model_training.random_state: 2
     outs:
     - path: models/random_forest_model.pkl
       hash: md5
-      md5: 2eb73a73c0d4f487228a4fc1063e2e97
-      size: 1002808
+      md5: eef8b54be9abd502be660211237cd95b
+      size: 1073975
   model_Evaluation:
     cmd: python End_To_End_ML_Pipeline_With_DVC/src/model_Evaluation.py
     deps:
@@ -85,14 +85,14 @@ stages:
       size: 5610
     - path: data/processed/test_vectorized.csv
       hash: md5
-      md5: 72c415d808b976f61e574c72ffa582ba
-      size: 290354
+      md5: 0ee7cec0593ce48f92a2df2125ce617c
+      size: 330517
     - path: models/random_forest_model.pkl
       hash: md5
-      md5: 2eb73a73c0d4f487228a4fc1063e2e97
-      size: 1002808
+      md5: eef8b54be9abd502be660211237cd95b
+      size: 1073975
     outs:
     - path: ./reports/metrics/model_evaluation_metrics.json
       hash: md5
-      md5: 6f3d70982b6a761427122091b029e3c7
-      size: 141
+      md5: 3775283088c5934b4e065584fc47ac9d
+      size: 140
