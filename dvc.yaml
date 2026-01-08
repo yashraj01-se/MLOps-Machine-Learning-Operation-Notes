@@ -1,0 +1,37 @@
+stages:
+  data_ingestion:
+    cmd: python End_To_End_ML_Pipeline_With_DVC/src/data_ingestion.py
+    deps:
+      - End_To_End_ML_Pipeline_With_DVC/src/data_ingestion.py
+    outs:
+      - data/raw
+  data_preprocessing:
+    cmd: python End_To_End_ML_Pipeline_With_DVC/src/data_preprocessing.py
+    deps:
+      - data/raw
+      - End_To_End_ML_Pipeline_With_DVC/src/data_preprocessing.py
+    outs:
+      - data/interim
+  Feature_Engineering:
+    cmd: python End_To_End_ML_Pipeline_With_DVC/src/Feature_Engineering.py
+    deps:
+      - data/interim
+      - End_To_End_ML_Pipeline_With_DVC/src/Feature_Engineering.py
+    outs:
+      - data/processed
+  model_training:
+    cmd: python End_To_End_ML_Pipeline_With_DVC/src/model_training.py
+    deps:
+      - data/processed
+      - End_To_End_ML_Pipeline_With_DVC/src/model_training.py
+    outs:
+      - models/random_forest_model.pkl
+  model_Evaluation:
+    cmd: python End_To_End_ML_Pipeline_With_DVC/src/model_Evaluation.py
+    deps:
+      - models/random_forest_model.pkl
+      - data/processed
+      - End_To_End_ML_Pipeline_With_DVC/src/model_Evaluation.py
+    outs:
+      -  ./reports/metrics/model_evaluation_metrics.json
+      
