@@ -73,11 +73,10 @@ stages:
       hash: md5
       md5: 5eaffc31fa06cf768bc1a00ea7166ce5
       size: 4471
-    - path: data/processed
+    - path: data/processed/test_vectorized.csv
       hash: md5
-      md5: 91030168afb4b320934f2532d6691321.dir
-      size: 1186348
-      nfiles: 2
+      md5: ae4b2c61099c547c300dbf931d90c2b7
+      size: 243888
     - path: models/random_forest_model.pkl
       hash: md5
       md5: 2123be36be965b4192052546c2d59ca5

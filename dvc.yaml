@@ -30,7 +30,7 @@ stages:
     cmd: python End_To_End_ML_Pipeline_With_DVC/src/model_Evaluation.py
     deps:
       - models/random_forest_model.pkl
-      - data/processed
+      - data/processed/test_vectorized.csv
       - End_To_End_ML_Pipeline_With_DVC/src/model_Evaluation.py
     outs:
       -  ./reports/metrics/model_evaluation_metrics.json
