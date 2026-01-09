@@ -71,4 +71,4 @@ with mlflow.start_run():
 
     mlflow.sklearn.log_model(rf, "random_forest_model")
 
-    print(f"Model accuracy: {accuracy}")
+    print(f"Model accuracy:{accuracy}")
