@@ -31,12 +31,56 @@ grid_search = GridSearchCV(estimator=rf,
                            n_jobs=-1,
                            verbose=2)
 
-# Start code Execution without MLflow
-grid_search.fit(X_train, y_train)
+# # Start code Execution without MLflow
+# grid_search.fit(X_train, y_train)
 
-# Get the best hyperparameters
-best_params = grid_search.best_params_
-best_score = grid_search.best_score_
+# # Get the best hyperparameters
+# best_params = grid_search.best_params_
+# best_score = grid_search.best_score_
 
-print(f"Best Hyperparameters: {best_params}")
-print(f"Best Cross-Validation Score: {best_score}")
+# print(f"Best Hyperparameters: {best_params}")
+# print(f"Best Cross-Validation Score: {best_score}")
+
+# Start code Execution with MLflow:
+mlflow.set_experiment("Breast_Cancer_Classification_Hyperparameter_Tuning")
+
+mlflow.set_tracking_uri("http://localhost:5000")
+with mlflow.start_run():
+    grid_search.fit(X_train, y_train)
+
+    # Get the best hyperparameters
+    best_params = grid_search.best_params_
+    best_score = grid_search.best_score_
+
+    # Log best hyperparameters and score to MLflow
+    mlflow.log_params(best_params)
+    mlflow.log_metric("best_cv_score", best_score)
+
+    print(f"Best Hyperparameters: {best_params}")
+    print(f"Best Cross-Validation Score: {best_score}")
+
+    # Log the best model
+    best_model = grid_search.best_estimator_
+    mlflow.sklearn.log_model(best_model, "best_random_forest_model")
+
+    # Log the current script
+    mlflow.log_artifact(__file__)
+
+    # Set tags
+    mlflow.set_tag("author", "Yashraj Sharma")
+    mlflow.set_tag("project", "Breast Cancer Classification Hyperparameter Tuning")
+
+
+    # log Training and testing dataset as artifacts:
+    train_df=X_train.copy()
+    train_df['target']=y_train
+
+    train_df=mlflow.data.from_pandas(train_df)
+    mlflow.log_input(train_df, "train_dataset.csv")
+
+    X_test_df=X_test.copy()
+    X_test_df['target']=y_test
+
+    test_df=mlflow.data.from_pandas(X_test_df)
+    mlflow.log_input(test_df, "test_dataset.csv")
+    
