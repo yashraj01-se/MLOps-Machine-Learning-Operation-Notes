@@ -45,8 +45,17 @@ grid_search = GridSearchCV(estimator=rf,
 mlflow.set_experiment("Breast_Cancer_Classification_Hyperparameter_Tuning")
 
 mlflow.set_tracking_uri("http://localhost:5000")
-with mlflow.start_run():
+with mlflow.start_run() as parent: # Parent run for hyperparameter tuning
     grid_search.fit(X_train, y_train)
+
+    for i in range(len(grid_search.cv_results_['params'])): # Log each hyperparameter combination
+        with mlflow.start_run(nested=True): # Nested run for each hyperparameter combination
+            params = grid_search.cv_results_['params'][i]
+            mean_test_score = grid_search.cv_results_['mean_test_score'][i]
+
+            # Log parameters and metrics for each hyperparameter combination
+            mlflow.log_params(params)
+            mlflow.log_metric("mean_test_score", mean_test_score)
 
     # Get the best hyperparameters
     best_params = grid_search.best_params_
