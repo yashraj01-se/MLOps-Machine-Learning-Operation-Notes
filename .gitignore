@@ -6,3 +6,4 @@ reports
 mlruns
 mlflow.db
 confusion_matrix.png
+mlartifacts

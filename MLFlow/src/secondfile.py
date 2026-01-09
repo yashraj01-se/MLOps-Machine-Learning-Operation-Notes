@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import dagshub
 
 # Load dataset
 data = load_wine()
@@ -25,7 +26,11 @@ X_train, X_test, y_train, y_test = train_test_split(X,
 max_depth = 10
 n_estimators = 10
 
-mlflow.set_tracking_uri("http://localhost:5000")
+#Dagshub MLflow tracking:
+dagshub.init(repo_owner='yashraj01-se', repo_name='MLOps-Machine-Learning-Operation-Notes', mlflow=True)
+mlflow.set_tracking_uri("https://dagshub.com/yashraj01-se/MLOps-Machine-Learning-Operation-Notes.mlflow")
+
+
 mlflow.set_experiment("Wine_Quality_Classification")
 # Start MLflow experiment
 with mlflow.start_run():
