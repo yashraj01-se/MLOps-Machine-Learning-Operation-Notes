@@ -1,0 +1,208 @@
+# ✅ What **IS Logged** by `mlflow.sklearn.autolog()`
+
+## 1. **Model Artifact**
+
+* Trained model (`RandomForestClassifier`)
+* Serialized with MLflow’s flavor
+* Stored under `artifacts/model/`
+
+✔ You do **not** need `mlflow.sklearn.log_model()`
+
+---
+
+## 2. **Hyperparameters**
+
+All parameters passed to the estimator constructor:
+
+* `n_estimators`
+* `max_depth`
+* `min_samples_split`
+* `random_state`
+* Any default or explicitly set sklearn parameters
+
+✔ Logged under **Params** tab
+
+---
+
+## 3. **Training & Validation Metrics**
+
+If applicable:
+
+* `training_score`
+* `validation_score`
+* Metrics from `model.score()`
+
+⚠️ **Note**
+Custom metrics like `accuracy_score(y_test, y_pred)` are **not logged automatically** unless they are returned by `.score()`.
+
+---
+
+## 4. **Model Signature**
+
+* Input schema (feature names + dtypes)
+* Output schema (prediction type)
+
+✔ Enables safe model serving and inference validation
+
+---
+
+## 5. **Input Example**
+
+* A sample input row (if `log_input_examples=True`, default = True)
+
+✔ Useful for debugging and serving
+
+---
+
+## 6. **Environment & Reproducibility**
+
+* Python version
+* `scikit-learn` version
+* Dependency snapshot (conda / pip)
+* MLflow version
+
+✔ Critical for reproducibility
+
+---
+
+## 7. **Run Metadata**
+
+* Run ID
+* Experiment ID
+* Start / end time
+* Duration
+* Status (FINISHED / FAILED)
+
+---
+
+# ❌ What **IS NOT Logged** by Autologging
+
+These **must be logged manually**.
+
+---
+
+## 1. **Custom Evaluation Metrics**
+
+Examples:
+
+* `accuracy_score`
+* `precision`
+* `recall`
+* `f1_score`
+* `roc_auc`
+
+You must log them yourself:
+
+```python
+mlflow.log_metric("accuracy", accuracy)
+```
+
+---
+
+## 2. **Artifacts (Images, Files, Plots)**
+
+Examples:
+
+* Confusion matrix plots
+* Feature importance plots
+* Source code files
+* CSVs, reports
+
+```python
+mlflow.log_artifact("confusion_matrix.png")
+```
+
+---
+
+## 3. **Dataset Files or Dataset Versions**
+
+Autologging does **not** log:
+
+* Raw datasets
+* Train/test splits
+* Dataset hashes
+* Data versions
+
+Use:
+
+* `mlflow.log_artifact()`
+* DVC (recommended)
+
+---
+
+## 4. **Tags (Business Metadata)**
+
+Examples:
+
+* Author
+* Project name
+* Experiment purpose
+* Jira ticket ID
+
+```python
+mlflow.set_tag("author", "Yashraj Sharma")
+```
+
+---
+
+## 5. **Data Leakage / Feature Engineering Steps**
+
+Autologging does **not** log:
+
+* Feature scaling logic
+* Encoding steps
+* Data cleaning rules
+
+✔ Use `sklearn.Pipeline` to capture transformations
+
+---
+
+## 6. **Custom Training Loops**
+
+Autologging only supports:
+
+* Standard sklearn `fit()`
+
+Not logged:
+
+* Manual loops
+* Custom loss functions
+* Non-sklearn estimators
+
+---
+
+# 🧠 Summary Table (Quick Reference)
+
+| Category            | Autologged | Manual |
+| ------------------- | ---------- | ------ |
+| Model               | ✅          | ❌      |
+| Hyperparameters     | ✅          | ❌      |
+| Training score      | ✅          | ❌      |
+| Custom metrics      | ❌          | ✅      |
+| Plots / images      | ❌          | ✅      |
+| Dataset files       | ❌          | ✅      |
+| Tags                | ❌          | ✅      |
+| Feature engineering | ❌          | ✅      |
+| Environment         | ✅          | ❌      |
+
+---
+
+# 🏁 Best-Practice Recommendation (Industry Standard)
+
+Use a **hybrid approach**:
+
+```python
+mlflow.sklearn.autolog()
+
+# Manual logging for:
+mlflow.log_metric("accuracy", accuracy)
+mlflow.log_artifact("confusion_matrix.png")
+mlflow.set_tag("project", "Wine Quality Classification")
+```
+
+This gives you:
+
+* Maximum automation
+* Full control where it matters
+* Clean, reproducible runs
+
