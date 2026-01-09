@@ -1,0 +1,162 @@
+## Parameters (Configuration)
+
+Things that **define how a run was executed**.
+
+* Model hyperparameters (e.g., learning rate, max depth, batch size)
+* Feature selection flags
+* Train/validation split ratios
+* Random seeds
+* Optimizer choice
+* Loss function name
+* Preprocessing options
+* Architecture choices (number of layers, units, etc.)
+
+---
+
+## Metrics (Scalar, Comparable Values)
+
+Things you want to **compare across runs**.
+
+* Accuracy
+* Loss (train / validation)
+* Precision / Recall / F1
+* AUC / ROC score
+* Log loss
+* RMSE / MAE / MSE
+* Throughput / latency (as numbers)
+* Custom scalar scores
+
+> Rule: metrics must be numeric scalars.
+
+---
+
+## Models
+
+Serialized model artifacts that can be:
+
+* Reloaded
+* Deployed
+* Promoted
+
+Includes:
+
+* scikit-learn models
+* PyTorch models
+* TensorFlow / Keras models
+* XGBoost / LightGBM models
+* Custom Python models
+
+Logged with:
+
+* Model signature
+* Input/output schema (optional)
+* Environment dependencies (optional)
+
+---
+
+## Artifacts (Rich Outputs)
+
+Non-scalar outputs that **provide context**.
+
+* Confusion matrices
+* ROC / PR curves
+* Plots and figures
+* Model files (if not using model registry)
+* Reports (PDF, HTML, JSON)
+* Sample predictions
+* Feature importance plots
+* Data snapshots (small, diagnostic only)
+
+---
+
+## Datasets (Metadata-Level)
+
+Metadata about datasets used in a run.
+
+* Dataset name or version
+* Dataset source reference
+* Dataset hash or identifier
+* Dataset schema
+* Training vs validation dataset references
+
+(MLflow tracks references, not full datasets.)
+
+---
+
+## Code & Environment Metadata
+
+Information needed to **reproduce the run**.
+
+* Git commit hash
+* Git repository URL
+* Branch name
+* Python version
+* Library versions
+* Conda / pip environment
+* OS information
+
+(Some captured automatically.)
+
+---
+
+## Tags (Searchable Metadata)
+
+Key–value annotations for organization.
+
+* Experiment purpose
+* Model type
+* Dataset version
+* Owner / author
+* Run intent (baseline, tuning, ablation)
+* Deployment readiness
+* Notes or flags
+
+Tags are not metrics and not params — they’re **labels**.
+
+---
+
+## Run-Level Metadata
+
+System-level information.
+
+* Run ID
+* Start time / end time
+* Execution duration
+* Parent / child run relationships
+* Nested runs
+
+---
+
+## Custom Logged Objects
+
+Advanced use cases.
+
+* Custom JSON objects (as artifacts)
+* Text logs
+* Evaluation tables
+* Serialized intermediate results
+
+---
+
+## What MLflow Should NOT Be Used For
+
+Important boundary:
+
+* Large raw datasets (use DVC / object storage)
+* Pipeline orchestration (use DVC / Airflow)
+* Feature stores (use Feast, etc.)
+* Non-reproducible ad-hoc state
+
+---
+
+## One-Line Summary (Mental Model)
+
+> **MLflow logs everything about a *run*: configuration, outcomes, context, and evidence — but not the pipeline itself or the data lifecycle.**
+
+This separation is what makes MLflow and DVC work well together.
+
+
+#####IMPORTANT#########
+MLflow UI is the server; your training script is the client.
+The server must exist before the client sends runs.
+
